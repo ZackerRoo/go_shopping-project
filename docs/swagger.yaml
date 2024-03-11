@@ -1,0 +1,572 @@
+basePath: /
+definitions:
+  api_helper.ErrorResponse:
+    properties:
+      errorMessage:
+        type: string
+    type: object
+  api_helper.Response:
+    properties:
+      message:
+        type: string
+    type: object
+  cart.Item:
+    properties:
+      cartID:
+        type: integer
+      count:
+        type: integer
+      product:
+        $ref: '#/definitions/product.Product'
+        type: object
+      productID:
+        type: integer
+    type: object
+  cart.ItemCartRequest:
+    properties:
+      count:
+        type: integer
+      sku:
+        type: string
+    type: object
+  category.Category:
+    properties:
+      desc:
+        type: string
+      isActive:
+        type: boolean
+      name:
+        type: string
+    type: object
+  category.CreateCategoryRequest:
+    properties:
+      desc:
+        type: string
+      name:
+        type: string
+    type: object
+  order.CancelOrderRequest:
+    properties:
+      orderId:
+        type: integer
+    type: object
+  pagination.Pages:
+    properties:
+      items:
+        type: object
+      page:
+        type: integer
+      pageCount:
+        type: integer
+      pageSize:
+        type: integer
+      totalCount:
+        type: integer
+    type: object
+  product.CreateProductRequest:
+    properties:
+      categoryID:
+        type: integer
+      count:
+        type: integer
+      desc:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+    type: object
+  product.CreateProductResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  product.DeleteProductRequest:
+    properties:
+      sku:
+        type: string
+    type: object
+  product.Product:
+    properties:
+      categoryID:
+        description: 分类id
+        type: integer
+      desc:
+        type: string
+      isDeleted:
+        type: boolean
+      name:
+        type: string
+      price:
+        type: number
+      sku:
+        type: string
+      stockCount:
+        type: integer
+    type: object
+  product.UpdateProductRequest:
+    properties:
+      categoryID:
+        type: integer
+      count:
+        type: integer
+      desc:
+        type: string
+      name:
+        type: string
+      price:
+        type: number
+      sku:
+        type: string
+    type: object
+  user.CreateUserRequest:
+    properties:
+      password:
+        type: string
+      password2:
+        type: string
+      username:
+        type: string
+    type: object
+  user.CreateUserResponse:
+    properties:
+      username:
+        type: string
+    type: object
+  user.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  user.LoginResponse:
+    properties:
+      token:
+        type: string
+      userId:
+        type: integer
+      username:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: 多课网
+    url: https://www.duoke360.com
+  description: 电商项目
+  license: {}
+  title: 电商项目
+  version: "1.0"
+paths:
+  /cart:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/cart.Item'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 获得购物车商品列表
+      tags:
+      - Cart
+  /cart/item:
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: product information
+        in: body
+        name: ItemCartRequest
+        required: true
+        schema:
+          $ref: '#/definitions/cart.ItemCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 更新Item
+      tags:
+      - Cart
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: product information
+        in: body
+        name: ItemCartRequest
+        required: true
+        schema:
+          $ref: '#/definitions/cart.ItemCartRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 添加Item
+      tags:
+      - Cart
+  /category:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pagination.Pages'
+      summary: 获得分类列表
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: category information
+        in: body
+        name: CreateCategoryRequest
+        required: true
+        schema:
+          $ref: '#/definitions/category.CreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 根据给定的参数创建分类
+      tags:
+      - Category
+  /category/upload:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: file contains category information
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 根据给定的csv文件，批量创建分类
+      tags:
+      - Category
+  /order:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: order information
+        in: body
+        name: CancelOrderRequest
+        required: true
+        schema:
+          $ref: '#/definitions/order.CancelOrderRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 取消订单
+      tags:
+      - Order
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pagination.Pages'
+      summary: 获得订单列表
+      tags:
+      - Order
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 完成订单
+      tags:
+      - Order
+  /product:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: sku of product
+        in: body
+        name: DeleteProductRequest
+        required: true
+        schema:
+          $ref: '#/definitions/product.DeleteProductRequest'
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 删除商品根据sku
+      tags:
+      - Product
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Search text to find matched sku numbers and names
+        in: query
+        name: qt
+        type: string
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/pagination.Pages'
+      summary: 获得商品列表（分页）
+      tags:
+      - Product
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: product information
+        in: body
+        name: UpdateProductRequest
+        required: true
+        schema:
+          $ref: '#/definitions/product.UpdateProductRequest'
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/product.CreateProductResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 更新商品更加sku
+      tags:
+      - Product
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Authentication header
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: product information
+        in: body
+        name: CreateProductRequest
+        required: true
+        schema:
+          $ref: '#/definitions/product.CreateProductRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/api_helper.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 创建商品
+      tags:
+      - Product
+  /user:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user information
+        in: body
+        name: CreateUserRequest
+        required: true
+        schema:
+          $ref: '#/definitions/user.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user.CreateUserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 根据给定的用户名和密码创建用户
+      tags:
+      - Auth
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user information
+        in: body
+        name: LoginRequest
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.LoginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/api_helper.ErrorResponse'
+      summary: 根据用户名和密码登录
+      tags:
+      - Auth
+swagger: "2.0"
